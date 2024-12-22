@@ -41,6 +41,10 @@ dependencies:
   dio: ^5.7.0
   retrofit: ^4.4.1
   retrofit_generator: ^8.2.1
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  flutter_secure_storage: ^4.2.1
+  intl: ^0.20.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +56,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  riverpod_generator: ^2.4.0
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

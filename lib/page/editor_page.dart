@@ -22,6 +22,30 @@ class _EditorPageState extends State<EditorPage> {
     super.initState();
   }
 
+  void onSubmitted(String value) {
+    log("onSubmitted $value");
+    if (value == "..t") {
+      setState(() {
+        tab++;
+      });
+    } else if (value == "..r") {
+      setState(() {
+        tab--;
+      });
+    } else {
+      setState(() {
+        memoLines.add(MemoLine(
+          tab: tab,
+          value: value,
+        ));
+      });
+    }
+
+    setState(() {
+      textEditingController.text = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -48,29 +72,7 @@ class _EditorPageState extends State<EditorPage> {
                 });
                 log("onChanged $value");
               },
-              onSubmitted: (value) {
-                log("onSubmitted $value");
-                if (value == "..t") {
-                  setState(() {
-                    tab++;
-                  });
-                } else if (value == "..r") {
-                  setState(() {
-                    tab--;
-                  });
-                } else {
-                  setState(() {
-                    memoLines.add(MemoLine(
-                      tab: tab,
-                      value: value,
-                    ));
-                  });
-                }
-
-                setState(() {
-                  textEditingController.text = "";
-                });
-              },
+              onSubmitted: onSubmitted,
             ),
           ),
         ],
