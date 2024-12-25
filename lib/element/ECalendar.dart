@@ -1,8 +1,7 @@
+import 'package:easy_memo/data/ui/memo.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ECalendar extends StatelessWidget {
-  final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   final DateTime selectedDate;
   final void Function(DateTime) onPick;
   ECalendar({super.key, required this.selectedDate, required this.onPick});
@@ -13,7 +12,7 @@ class ECalendar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "${dateFormat.format(selectedDate)}",
+          dateFormat.format(selectedDate),
         ),
         SizedBox(
           width: 10,

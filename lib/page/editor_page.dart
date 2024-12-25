@@ -1,16 +1,18 @@
 import 'dart:developer';
 
 import 'package:easy_memo/data/ui/memo_line.dart';
+import 'package:easy_memo/provider/storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditorPage extends StatefulWidget {
+class EditorPage extends ConsumerStatefulWidget {
   const EditorPage({super.key});
 
   @override
-  State<EditorPage> createState() => _EditorPageState();
+  ConsumerState<EditorPage> createState() => _EditorPageState();
 }
 
-class _EditorPageState extends State<EditorPage> {
+class _EditorPageState extends ConsumerState<EditorPage> {
   final TextEditingController textEditingController = TextEditingController();
   List<MemoLine> memoLines = [];
   String textValue = "";
@@ -44,6 +46,8 @@ class _EditorPageState extends State<EditorPage> {
     setState(() {
       textEditingController.text = "";
     });
+
+    ref.read(storageProvider).writeMemo(memoLines);
   }
 
   @override
