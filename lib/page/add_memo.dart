@@ -28,8 +28,10 @@ class _PageAddMemoState extends State<PageAddMemo> {
                 child: Column(
                   children: [
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 11),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 11,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // Date
@@ -58,7 +60,9 @@ class _PageAddMemoState extends State<PageAddMemo> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Color(0x34545456)),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
                       ),
                       height: 1,
                     ),
@@ -119,7 +123,10 @@ class _PageAddMemoState extends State<PageAddMemo> {
                 ),
               ),
               SizedBox(height: 20),
-              NormalButton(text: "저장"),
+              NormalButton(
+                text: "저장",
+                onTap: () async {},
+              ),
             ],
           ),
         ),

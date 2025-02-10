@@ -21,10 +21,16 @@ class MyApp extends StatelessWidget {
             primary: Colors.blue,
             secondary: Colors.black,
             tertiary: Colors.grey,
+            outline: Color(0x34545456),
           ),
           useMaterial3: true,
           scaffoldBackgroundColor: Color(0xFFE9E9E9),
           textTheme: TextTheme(
+            displaySmall: TextStyle(
+              fontFamily: "NotoSansKR",
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
+            ),
             headlineMedium: TextStyle(
               fontFamily: "NotoSansKR",
               fontSize: 24,
