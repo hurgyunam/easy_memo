@@ -1,13 +1,31 @@
+import 'package:easy_memo/data/memo.dart';
+import 'package:easy_memo/provider/memo_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PageCalendar extends StatefulWidget {
+class PageCalendar extends ConsumerStatefulWidget {
   const PageCalendar({super.key});
 
   @override
-  State<PageCalendar> createState() => _PageCalendarState();
+  ConsumerState<PageCalendar> createState() => _PageCalendarState();
 }
 
-class _PageCalendarState extends State<PageCalendar> {
+class _PageCalendarState extends ConsumerState<PageCalendar> {
+  DateTime selectedDate = DateTime.now();
+  Set<Memo> memos = {};
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    ref.read(memoStorageProvider).loadByDate(date: selectedDate).then((value) {
+      setState(() {
+        memos = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     const List<String> weekDays = [
@@ -33,14 +51,6 @@ class _PageCalendarState extends State<PageCalendar> {
     for (var i = 1; i <= monthLastDay.day; i++) {
       dateNumbers.add(i);
     }
-
-    final memoTitles = [
-      "2025-02-01 13:50:23",
-      "티끌 가사 컨셉",
-      "눈을 낮춰 지금의 나를 보다 컨셉",
-      "2025-02-01 16:21:03",
-      "2025-02-01 18:00:00",
-    ];
 
     return Scrollbar(
       child: SingleChildScrollView(
@@ -170,9 +180,8 @@ class _PageCalendarState extends State<PageCalendar> {
                 child: Column(
                   // list
                   children: [
-                    ...memoTitles.map((title) {
-                      final isLast =
-                          memoTitles.indexOf(title) == memoTitles.length - 1;
+                    ...memos.map((memo) {
+                      final isLast = memo == memos.last;
 
                       return Container(
                         // list item
@@ -192,7 +201,7 @@ class _PageCalendarState extends State<PageCalendar> {
                           children: [
                             Container(
                               child: Expanded(
-                                child: Text(title),
+                                child: Text(memo.title),
                               ),
                             ),
                             Container(

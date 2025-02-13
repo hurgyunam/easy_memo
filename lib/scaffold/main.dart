@@ -1,5 +1,6 @@
 import 'package:easy_memo/page/add_memo.dart';
 import 'package:easy_memo/page/calendar.dart';
+import 'package:easy_memo/page/test.dart';
 import 'package:flutter/material.dart';
 
 class ScaffoldMain extends StatefulWidget {
@@ -34,6 +35,7 @@ class _ScaffoldMainState extends State<ScaffoldMain> {
                   controller: pageController,
                   onPageChanged: (index) {},
                   children: [
+                    PageTest(),
                     PageAddMemo(),
                     PageCalendar(),
                   ],
