@@ -65,11 +65,16 @@ class SaveMemoAction {
             memoId: memo.memoId, rootMemoId: rootMemoId, storage: storage);
 
         memo = memo.copyWith(historyId: newHistoryId);
+
+        await _addMemoHistoryId(
+            historyId: newHistoryId,
+            memoId: rootMemoId,
+            storage: storage); // 새로 만든 히스토리에 rootMemo도 추가
       }
 
       if (memo != null) {
         // 메모를 저장하려던 중에 에러가 발생
-        storage.write(key: key, value: jsonEncode(memo.toJson()));
+        await storage.write(key: key, value: jsonEncode(memo.toJson()));
 
         return memo.memoId;
       } else {
@@ -123,7 +128,7 @@ class SaveMemoAction {
     final json = await storage.read(key: key);
 
     if (json != null) {
-      Set<String>? memoIds = jsonDecode(json);
+      List<String>? memoIds = jsonDecode(json).cast<String>();
       Set<String> newMemoIds;
 
       if (memoIds == null) {
@@ -132,7 +137,7 @@ class SaveMemoAction {
         newMemoIds = {...memoIds, memoId};
       }
 
-      await storage.write(key: key, value: jsonEncode(newMemoIds));
+      await storage.write(key: key, value: jsonEncode(newMemoIds.toList()));
 
       return true;
     } else {
@@ -149,7 +154,7 @@ class SaveMemoAction {
     final newId = idGenerator.v4();
     final key = "history:$newId";
 
-    final history = {rootMemoId, memoId};
+    final history = [rootMemoId, memoId];
     await storage.write(key: key, value: jsonEncode(history));
 
     return newId;

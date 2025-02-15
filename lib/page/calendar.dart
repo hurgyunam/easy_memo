@@ -12,7 +12,7 @@ class PageCalendar extends ConsumerStatefulWidget {
 
 class _PageCalendarState extends ConsumerState<PageCalendar> {
   DateTime selectedDate = DateTime.now();
-  Set<Memo> memos = {};
+  List<Memo> memos = [];
 
   @override
   void initState() {

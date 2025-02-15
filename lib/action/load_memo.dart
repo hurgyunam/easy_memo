@@ -6,7 +6,26 @@ import 'package:intl/intl.dart';
 
 class LoadMemoAction {
   final dateFormat = DateFormat("yyyy-MM-dd");
-  Future<Set<Memo>> loadByDate({
+
+  Future<Memo?> loadByMemoId({
+    required String memoId,
+    required FlutterSecureStorage storage,
+  }) async {
+    final key = "memo:$memoId";
+
+    final json = await storage.read(key: key);
+
+    if (json != null) {
+      final Map<String, dynamic> map = jsonDecode(json);
+      final Memo memo = Memo.fromJson(map);
+
+      return memo;
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<Memo>> loadByDate({
     required DateTime date,
     required FlutterSecureStorage storage,
   }) async {
@@ -22,25 +41,24 @@ class LoadMemoAction {
     final json = await storage.read(key: key);
 
     if (json != null) {
-      Set<String>? memoIds = jsonDecode(json);
+      final List list = jsonDecode(json);
+      Set<String>? memoIds = list.cast<String>().toSet();
 
-      if (memoIds != null) {
-        Set<Memo> memos = {};
+      List<Memo> memos = [];
 
-        for (String memoId in memoIds) {
-          final memoKey = "memo:$memoId";
-          final memoJson = await storage.read(key: memoKey);
+      for (String memoId in memoIds) {
+        final memoKey = "memo:$memoId";
+        final memoJson = await storage.read(key: memoKey);
 
-          if (memoJson != null) {
-            memos.add(Memo.fromJson(jsonDecode(memoJson)));
-          }
+        if (memoJson != null) {
+          memos.add(Memo.fromJson(jsonDecode(memoJson)));
         }
-
-        return memos;
       }
-    }
 
-    return {};
+      return memos;
+    } else {
+      return [];
+    }
   }
   /**
    * function readByDates(Date date): List<Memo> {

@@ -24,9 +24,9 @@ class MemoStorage {
     required DateTime date,
     required String title,
     required String content,
-    String? memoId,
-    String? historyId,
-    String? rootMemoId,
+    String? memoId, // 수정 할 때
+    String? historyId, // 기존 히스토리에 추가할 때
+    String? rootMemoId, // 처음 히스토리를 만들 때
   }) async {
     return saveMemoAction.saveMemo(
         date: date,
@@ -38,7 +38,7 @@ class MemoStorage {
         rootMemoId: rootMemoId);
   }
 
-  Future<Set<Memo>> loadByDate({
+  Future<List<Memo>> loadByDate({
     required DateTime date,
   }) async {
     storage.readAll().then((value) {
@@ -46,5 +46,15 @@ class MemoStorage {
     });
 
     return loadMemoAction.loadByDate(date: date, storage: storage);
+  }
+
+  Future<Memo?> loadByMemoId({
+    required String memoId,
+  }) async {
+    storage.readAll().then((value) {
+      print(value);
+    });
+
+    return loadMemoAction.loadByMemoId(memoId: memoId, storage: storage);
   }
 }
