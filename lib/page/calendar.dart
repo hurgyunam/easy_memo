@@ -1,7 +1,9 @@
 import 'package:easy_memo/data/memo.dart';
+import 'package:easy_memo/element/DateNumber.dart';
 import 'package:easy_memo/provider/memo_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class PageCalendar extends ConsumerStatefulWidget {
   const PageCalendar({super.key});
@@ -11,6 +13,7 @@ class PageCalendar extends ConsumerStatefulWidget {
 }
 
 class _PageCalendarState extends ConsumerState<PageCalendar> {
+  final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   DateTime selectedDate = DateTime.now();
   List<Memo> memos = [];
 
@@ -18,12 +21,6 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    ref.read(memoStorageProvider).loadByDate(date: selectedDate).then((value) {
-      setState(() {
-        memos = value;
-      });
-    });
   }
 
   @override
@@ -42,7 +39,7 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     final monthStartDay = DateTime(now.year, now.month, 1);
     final monthLastDay = DateTime(now.year, now.month + 1, 0);
 
-    final dateNumbers = [];
+    final List<int> dateNumbers = [];
 
     for (var i = 0; i < monthStartDay.weekday; i++) {
       dateNumbers.add(0);
@@ -51,6 +48,12 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     for (var i = 1; i <= monthLastDay.day; i++) {
       dateNumbers.add(i);
     }
+
+    ref.read(memoStorageProvider).loadByDate(date: selectedDate).then((value) {
+      setState(() {
+        memos = value;
+      });
+    });
 
     return Scrollbar(
       child: SingleChildScrollView(
@@ -87,7 +90,7 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
                                 ),
                           ),
                           Text(
-                            "2025-02-01",
+                            dateFormat.format(selectedDate),
                             style: Theme.of(context)
                                 .textTheme
                                 .labelMedium
@@ -146,18 +149,16 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
                                 );
                               }),
                               ...dateNumbers.map((date) {
-                                return Center(
-                                  child: Text(
-                                    date == 0 ? "" : date.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                  ),
+                                return DateNumber(
+                                  day: date,
+                                  isSelected: date == selectedDate.day,
+                                  onTap: (int day) {
+                                    setState(() {
+                                      selectedDate =
+                                          selectedDate.copyWith(day: day);
+                                    });
+                                  },
+                                  isToday: date == now.day,
                                 );
                               })
                             ],
