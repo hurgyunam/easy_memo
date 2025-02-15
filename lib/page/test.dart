@@ -69,6 +69,46 @@ class PageTest extends ConsumerWidget {
                   }
                 },
               ),
+              SizedBox(height: 10),
+              NormalButton(
+                text: "테스트 4: 히스토리 ID로 메모 탐색",
+                onTap: () async {
+                  final oldMemoId = await memoStorage.saveMemo(
+                      date: DateTime.now(), title: "TITLE", content: "CONTENT");
+                  final newMemoId = await memoStorage.saveMemo(
+                      date: DateTime.now(),
+                      title: "TITLE",
+                      content: "CONTENT",
+                      rootMemoId: oldMemoId);
+                  if (newMemoId != null) {
+                    final memo =
+                        await memoStorage.loadByMemoId(memoId: newMemoId);
+
+                    if (memo != null) {
+                      final historyId = memo.historyId;
+
+                      if (historyId != null) {
+                        final memos = await memoStorage.loadByHistoryId(
+                            historyId: historyId);
+
+                        if (memos.length == 2) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("성공")));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("실패: 메모 길이 ${memos.length}")));
+                        }
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("실패: 저장된 메모 불러오지 못함")));
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("메모 로드 실패")));
+                  }
+                },
+              ),
             ],
           ),
         ),

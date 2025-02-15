@@ -60,31 +60,33 @@ class LoadMemoAction {
       return [];
     }
   }
-  /**
-   * function readByDates(Date date): List<Memo> {
-      List<String> memoIds = storage.read(`date:${date}`);
-      List<Memo> result = [];
 
-      for(String memoId in memoIds) {
-      Memo memo = storage.read(`memo:${memoId}`);
+  Future<List<Memo>> loadByHistoryId({
+    required String historyId,
+    required FlutterSecureStorage storage,
+  }) async {
+    final key = "history:$historyId";
 
-      result.add(memo);
+    final json = await storage.read(key: key);
+
+    if (json != null) {
+      final List list = jsonDecode(json);
+      Set<String>? memoIds = list.cast<String>().toSet();
+
+      List<Memo> memos = [];
+
+      for (String memoId in memoIds) {
+        final memoKey = "memo:$memoId";
+        final memoJson = await storage.read(key: memoKey);
+
+        if (memoJson != null) {
+          memos.add(Memo.fromJson(jsonDecode(memoJson)));
+        }
       }
 
-      return result;
-      }
-
-      function readByHistoryId(String historyId): List<Memo> {
-      List<String> memoIds = storage.read(`history:${historyId}`);
-      List<Memo> result = [];
-
-      for(String memoId in memoIds) {
-      Memo memo = storage.read(`memo:${memoId}`);
-
-      result.add(memo);
-      }
-
-      return result;
-      }
-   */
+      return memos;
+    } else {
+      return [];
+    }
+  }
 }

@@ -41,20 +41,19 @@ class MemoStorage {
   Future<List<Memo>> loadByDate({
     required DateTime date,
   }) async {
-    storage.readAll().then((value) {
-      print(value);
-    });
-
     return loadMemoAction.loadByDate(date: date, storage: storage);
   }
 
   Future<Memo?> loadByMemoId({
     required String memoId,
   }) async {
-    storage.readAll().then((value) {
-      print(value);
-    });
-
     return loadMemoAction.loadByMemoId(memoId: memoId, storage: storage);
+  }
+
+  Future<List<Memo>> loadByHistoryId({
+    required String historyId,
+  }) async {
+    return loadMemoAction.loadByHistoryId(
+        historyId: historyId, storage: storage);
   }
 }
