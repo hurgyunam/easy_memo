@@ -1,8 +1,8 @@
+import 'package:easy_memo/element/memo_editor_frame.dart';
 import 'package:easy_memo/element/normal_button.dart';
 import 'package:easy_memo/provider/memo_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class PageAddMemo extends ConsumerStatefulWidget {
   const PageAddMemo({super.key});
@@ -12,7 +12,6 @@ class PageAddMemo extends ConsumerStatefulWidget {
 }
 
 class _PageAddMemoState extends ConsumerState<PageAddMemo> {
-  final DateFormat format = DateFormat("yyyy-MM-dd");
   DateTime nowZeroTime = DateTime.now().copyWith(
     hour: 0,
     minute: 0,
@@ -50,116 +49,34 @@ class _PageAddMemoState extends ConsumerState<PageAddMemo> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                // Date, Title, Content
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 11,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // Date
-                        children: [
-                          Text(
-                            "Date",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                          ),
-                          Text(
-                            format.format(nowZeroTime),
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                ),
-                          ),
-                        ],
+              MemoEditorFrame(
+                  titleEditor: TextField(
+                    decoration: InputDecoration(hintText: "제목"),
+                    controller: titleController,
+                    onChanged: (title) {
+                      setState(() {
+                        textTitle = title;
+                      });
+                    },
+                  ),
+                  contentEditor: TextField(
+                    minLines: 6,
+                    maxLines: null,
+                    controller: contentController,
+                    onChanged: (content) {
+                      setState(() {
+                        textContent = content;
+                      });
+                    },
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      hintText: "메모 작성 중..",
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                      height: 1,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 11),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // Date
-                        children: [
-                          Text(
-                            "Title",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              decoration: InputDecoration(hintText: "제목"),
-                              controller: titleController,
-                              onChanged: (title) {
-                                setState(() {
-                                  textTitle = title;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                      height: 1,
-                    ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width,
-                        maxHeight: MediaQuery.of(context).size.height,
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 11),
-                      child: TextField(
-                        minLines: 6,
-                        maxLines: null,
-                        controller: contentController,
-                        onChanged: (content) {
-                          setState(() {
-                            textContent = content;
-                          });
-                        },
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(
-                          hintText: "메모 작성 중..",
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                  selectedDate: nowZeroTime),
               SizedBox(height: 20),
               NormalButton(
                 text: "저장",
