@@ -1,16 +1,13 @@
-# easy_memo
+# History Memo
+단순한 메모 기능에 히스토리 기능을 추가하여 메모 사이의 연관성 기능이 추가됨.
+또한 날짜 기반
 
-Easy Memo
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# TODO
+- 메모 상세(수정) 페이지 팝업
+- 메모 히스토리 추가 팝업
+- 메모 히스토리 비교 팝업
+- 메모 작성 페이지에서 작성을 완료한 후 메모 상세 페이지 팝업을 호출
+- 캘린더에서 메모 리스트 아이템을 클릭하면 메모 상세 페이지 팝업을 호출
+- 히스토리가 없는 메모는 오른쪽에 + 버튼이 나타나는 데 터치 시 히스토리 신규 메모 팝업을 호출
+- 히스토리가 있는 메모는 오른쪽에 Stack 버튼이 나타나는 데 터치시 히스토리 리스트 팝업을 호출
+- 메모 상세 페이지 팝업에서 히스토리가 있는 경우 버튼이 생기고 이를 터치 시 이전 히스토리와의 코드 비교 팝업을 호출

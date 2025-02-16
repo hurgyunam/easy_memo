@@ -1,5 +1,5 @@
 import 'package:easy_memo/data/memo.dart';
-import 'package:easy_memo/element/DateNumber.dart';
+import 'package:easy_memo/element/date_number.dart';
 import 'package:easy_memo/provider/memo_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +21,16 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    loadByDate(selectedDate);
+  }
+
+  Future<void> loadByDate(DateTime date) async {
+    final memos =
+        await ref.read(memoStorageProvider).loadByDate(date: selectedDate);
+
+    setState(() {
+      this.memos = memos;
+    });
   }
 
   @override
@@ -48,12 +58,6 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     for (var i = 1; i <= monthLastDay.day; i++) {
       dateNumbers.add(i);
     }
-
-    ref.read(memoStorageProvider).loadByDate(date: selectedDate).then((value) {
-      setState(() {
-        memos = value;
-      });
-    });
 
     return Scrollbar(
       child: SingleChildScrollView(
@@ -157,6 +161,7 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
                                       selectedDate =
                                           selectedDate.copyWith(day: day);
                                     });
+                                    loadByDate(selectedDate);
                                   },
                                   isToday: date == now.day,
                                 );

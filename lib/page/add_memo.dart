@@ -36,6 +36,8 @@ class _PageAddMemoState extends ConsumerState<PageAddMemo> {
 
     titleController.text = "";
     contentController.text = "";
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("메모가 추가되었습니다.")));
   }
 
   @override
@@ -89,9 +91,7 @@ class _PageAddMemoState extends ConsumerState<PageAddMemo> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
+                        color: Theme.of(context).colorScheme.outline,
                       ),
                       height: 1,
                     ),
@@ -124,21 +124,12 @@ class _PageAddMemoState extends ConsumerState<PageAddMemo> {
                               },
                             ),
                           ),
-                          // Text(
-                          //   "제목",
-                          //   style: Theme.of(context)
-                          //       .textTheme
-                          //       .labelMedium
-                          //       ?.copyWith(
-                          //         color: Theme.of(context).colorScheme.tertiary,
-                          //       ),
-                          // ),
                         ],
                       ),
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: Color(0x34545456)),
+                        color: Theme.of(context).colorScheme.outline,
                       ),
                       height: 1,
                     ),
