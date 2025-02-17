@@ -1,5 +1,6 @@
 import 'package:easy_memo/data/memo.dart';
 import 'package:easy_memo/element/date_number.dart';
+import 'package:easy_memo/popup/edit_popup.dart';
 import 'package:easy_memo/provider/memo_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -205,8 +206,19 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
                         ),
                         child: Row(
                           children: [
-                            Container(
-                              child: Expanded(
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                    return EditPopup(
+                                      memoId: memo.memoId,
+                                      title: memo.title,
+                                      content: memo.title,
+                                      date: memo.date,
+                                    );
+                                  }));
+                                },
                                 child: Text(memo.title),
                               ),
                             ),

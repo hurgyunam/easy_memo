@@ -59,14 +59,15 @@ class MemoEditorFrame extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // Date
               children: [
-                Text(
-                  "Title",
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
+                Expanded(
+                  child: Text(
+                    "Title",
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  ),
                 ),
-                SizedBox(
-                  width: 100,
+                Expanded(
                   child: titleEditor,
                 ),
               ],

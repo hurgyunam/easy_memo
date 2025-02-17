@@ -73,7 +73,6 @@ class SaveMemoAction {
       }
 
       if (memo != null) {
-        // 메모를 저장하려던 중에 에러가 발생
         await storage.write(key: key, value: jsonEncode(memo.toJson()));
 
         return memo.memoId;

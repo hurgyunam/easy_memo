@@ -21,10 +21,10 @@ class MemoStorage {
   }
 
   Future<String?> saveMemo({
-    required DateTime date,
     required String title,
     required String content,
-    String? memoId, // 수정 할 때
+    required DateTime date, // 수정할 때는 사용되지 않음
+    String? memoId, // 수정 할 때 id
     String? historyId, // 기존 히스토리에 추가할 때
     String? rootMemoId, // 처음 히스토리를 만들 때
   }) async {

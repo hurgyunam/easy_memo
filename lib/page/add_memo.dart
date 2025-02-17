@@ -50,33 +50,34 @@ class _PageAddMemoState extends ConsumerState<PageAddMemo> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               MemoEditorFrame(
-                  titleEditor: TextField(
-                    decoration: InputDecoration(hintText: "제목"),
-                    controller: titleController,
-                    onChanged: (title) {
-                      setState(() {
-                        textTitle = title;
-                      });
-                    },
-                  ),
-                  contentEditor: TextField(
-                    minLines: 6,
-                    maxLines: null,
-                    controller: contentController,
-                    onChanged: (content) {
-                      setState(() {
-                        textContent = content;
-                      });
-                    },
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      hintText: "메모 작성 중..",
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
+                titleEditor: TextField(
+                  decoration: InputDecoration(hintText: "제목"),
+                  controller: titleController,
+                  onChanged: (title) {
+                    setState(() {
+                      textTitle = title;
+                    });
+                  },
+                ),
+                contentEditor: TextField(
+                  minLines: 6,
+                  maxLines: null,
+                  controller: contentController,
+                  onChanged: (content) {
+                    setState(() {
+                      textContent = content;
+                    });
+                  },
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    hintText: "메모 작성 중..",
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide.none,
                     ),
                   ),
-                  selectedDate: nowZeroTime),
+                ),
+                selectedDate: nowZeroTime,
+              ),
               SizedBox(height: 20),
               NormalButton(
                 text: "저장",
