@@ -23,6 +23,8 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     // TODO: implement initState
     super.initState();
     loadByDate(selectedDate);
+
+    throw Exception("안심하세요. 생계형 도둑입니다.");
   }
 
   Future<void> loadByDate(DateTime date) async {
