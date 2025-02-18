@@ -83,12 +83,14 @@ class _EditPopupState extends ConsumerState<EditPopup> {
                     onTap: () async {
                       final memoStorage = ref.read(memoStorageProvider);
 
-                      memoStorage.saveMemo(
+                      final savedMemoId = memoStorage.saveMemo(
                         title: textTitle,
                         content: textContent,
                         date: widget.date,
                         memoId: widget.memoId,
                       );
+
+                      Navigator.pop(context, savedMemoId);
                     },
                   ),
                 ],

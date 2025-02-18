@@ -34,6 +34,26 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     });
   }
 
+  Future<void> onTapMemoListItem(Memo memo) async {
+    final savedMemoId =
+        await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return EditPopup(
+        memoId: memo.memoId,
+        title: memo.title,
+        content: memo.title,
+        date: memo.date,
+      );
+    }));
+
+    if (savedMemoId != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("메모가 수정되었습니다.")));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("메모를 수정하는 중 에러가 발생했습니다.")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const List<String> weekDays = [
@@ -208,16 +228,8 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                    return EditPopup(
-                                      memoId: memo.memoId,
-                                      title: memo.title,
-                                      content: memo.title,
-                                      date: memo.date,
-                                    );
-                                  }));
+                                onTap: () async {
+                                  await onTapMemoListItem(memo);
                                 },
                                 child: Text(memo.title),
                               ),
