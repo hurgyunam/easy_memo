@@ -57,8 +57,7 @@ class SaveMemoAction {
         if (result) {
           memo = memo.copyWith(historyId: historyId);
         } else {
-          //TODO: crashlytics
-          memo = null;
+          throw Exception("메모 저장 중 히스토리를 찾지 못했습니다: $historyId");
         }
       } else if (rootMemoId != null) {
         final newHistoryId = await _createMemoHistory(
@@ -70,19 +69,34 @@ class SaveMemoAction {
             historyId: newHistoryId,
             memoId: rootMemoId,
             storage: storage); // 새로 만든 히스토리에 rootMemo도 추가
+
+        _updateRootMemo(
+            rootMemoId: rootMemoId, historyId: newHistoryId, storage: storage);
       }
 
-      if (memo != null) {
-        await storage.write(key: key, value: jsonEncode(memo.toJson()));
-
-        return memo.memoId;
-      } else {
-        //TODO: crashlytics
-        return null;
-      }
+      await storage.write(key: key, value: jsonEncode(memo.toJson()));
+      return memo.memoId;
     } else {
-      //TODO: crashlytics
-      return null;
+      throw Exception("메모 저장 중 기존 메모를 찾지 못했습니다: $key");
+    }
+  }
+
+  Future<void> _updateRootMemo(
+      {required String rootMemoId,
+      required String historyId,
+      required FlutterSecureStorage storage}) async {
+    final key = "memo:$rootMemoId";
+    String? raw = await storage.read(key: key);
+
+    if (raw != null) {
+      final Map<String, dynamic> json = jsonDecode(raw);
+      final parsedMemo = Memo.fromJson(json);
+      Memo memo = parsedMemo.copyWith(
+        historyId: historyId,
+      );
+      await storage.write(key: key, value: jsonEncode(memo.toJson()));
+    } else {
+      throw Exception("히스토리 루트 메모 갱신 시도에 실패했습니다.: $key");
     }
   }
 
@@ -140,8 +154,7 @@ class SaveMemoAction {
 
       return true;
     } else {
-      //TODO: crashlytics
-      return false;
+      throw Exception("히스토리 정보를 불러오지 못했습니다: $key");
     }
   }
 

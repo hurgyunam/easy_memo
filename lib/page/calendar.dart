@@ -1,10 +1,13 @@
 import 'package:easy_memo/data/memo.dart';
 import 'package:easy_memo/element/date_number.dart';
 import 'package:easy_memo/popup/edit_popup.dart';
+import 'package:easy_memo/popup/history_list_popup.dart';
 import 'package:easy_memo/provider/memo_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+
+import '../popup/create_history_memo_popup.dart';
 
 class PageCalendar extends ConsumerStatefulWidget {
   const PageCalendar({super.key});
@@ -23,8 +26,6 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     // TODO: implement initState
     super.initState();
     loadByDate(selectedDate);
-
-    throw Exception("안심하세요. 생계형 도둑입니다.");
   }
 
   Future<void> loadByDate(DateTime date) async {
@@ -48,11 +49,45 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     }));
 
     if (savedMemoId != null) {
+      loadByDate(selectedDate);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("메모가 수정되었습니다.")));
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("메모를 수정하는 중 에러가 발생했습니다.")));
+    }
+  }
+
+  Future<void> onTapCreateHistory(Memo memo) async {
+    final savedMemoId =
+        await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return CreateHistoryMemoPopup(
+        rootMemoId: memo.memoId,
+        rootMemoTitle: memo.title,
+      );
+    }));
+
+    if (savedMemoId != null) {
+      loadByDate(selectedDate);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("메모가 수정되었습니다.")));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("메모를 수정하는 중 에러가 발생했습니다.")));
+    }
+  }
+
+  Future<void> onTapViewHistory(Memo memo) async {
+    final historyId = memo.historyId;
+
+    if (historyId != null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return HistoryListPopup(
+          historyId: historyId,
+        );
+      }));
+    } else {
+      throw Exception("히스토리 리스트를 접근하는데 있어 올바르지 않은 접근입니다. $historyId");
     }
   }
 
@@ -243,12 +278,24 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.add_circle,
-                              ),
-                            )
+                            if (memo.historyId == null)
+                              IconButton(
+                                onPressed: () {
+                                  onTapCreateHistory(memo);
+                                },
+                                icon: Icon(
+                                  Icons.add_circle,
+                                ),
+                              )
+                            else
+                              IconButton(
+                                onPressed: () {
+                                  onTapViewHistory(memo);
+                                },
+                                icon: Icon(
+                                  Icons.layers,
+                                ),
+                              )
                           ],
                         ),
                       );
