@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../element/normal_button.dart';
+import 'create_history_memo_popup.dart';
 import 'edit_popup.dart';
 
 class HistoryListPopup extends ConsumerStatefulWidget {
@@ -46,7 +48,7 @@ class _HistoryListPopupState extends ConsumerState<HistoryListPopup> {
       return EditPopup(
         memoId: memo.memoId,
         title: memo.title,
-        content: memo.title,
+        content: memo.text,
         date: memo.date,
       );
     }));
@@ -55,9 +57,22 @@ class _HistoryListPopupState extends ConsumerState<HistoryListPopup> {
       loadHistoryMemos();
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("메모가 수정되었습니다.")));
-    } else {
+    }
+  }
+
+  Future<void> onTapAddMemo() async {
+    final savedMemoId =
+        await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return CreateHistoryMemoPopup(
+        historyId: widget.historyId,
+        rootMemoTitle: historyMemos.last.title,
+      );
+    }));
+
+    if (savedMemoId != null) {
+      loadHistoryMemos();
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("메모를 수정하는 중 에러가 발생했습니다.")));
+          .showSnackBar(SnackBar(content: Text("메모가 추가되었습니다.")));
     }
   }
 
@@ -71,47 +86,61 @@ class _HistoryListPopupState extends ConsumerState<HistoryListPopup> {
         child: RawScrollbar(
           child: SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimary,
-                borderRadius: BorderRadius.circular(5),
-              ),
+              padding: EdgeInsets.all(16),
               child: Column(
                 children: [
-                  ...historyMemos.map((memo) {
-                    final isLast = memo == historyMemos.last;
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      children: [
+                        ...historyMemos.map((memo) {
+                          final isLast = memo == historyMemos.last;
 
-                    return Container(
-                      // list item
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: isLast
-                              ? BorderSide.none
-                              : BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  width: 0.3,
-                                ),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                onTapMemoListItem(memo);
-                              },
-                              child: Text(memo.title),
+                          return Container(
+                            // list item
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: isLast
+                                    ? BorderSide.none
+                                    : BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        width: 0.3,
+                                      ),
+                              ),
                             ),
-                          ),
-                          Text(
-                            dateFormat.format(memo.date),
-                          ),
-                        ],
-                      ),
-                    );
-                  })
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      onTapMemoListItem(memo);
+                                    },
+                                    child: Text(memo.title),
+                                  ),
+                                ),
+                                Text(
+                                  dateFormat.format(memo.date),
+                                ),
+                              ],
+                            ),
+                          );
+                        })
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  NormalButton(
+                    text: "해당 히스토리에 신규 메모 추가",
+                    onTap: () async {
+                      onTapAddMemo();
+                    },
+                  ),
                 ],
               ),
             ),

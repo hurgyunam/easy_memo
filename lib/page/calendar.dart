@@ -70,10 +70,10 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     if (savedMemoId != null) {
       loadByDate(selectedDate);
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("메모가 수정되었습니다.")));
+          .showSnackBar(SnackBar(content: Text("메모가 추가되었습니다.")));
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("메모를 수정하는 중 에러가 발생했습니다.")));
+          .showSnackBar(SnackBar(content: Text("메모를 추가하는 중 에러가 발생했습니다.")));
     }
   }
 
@@ -81,11 +81,13 @@ class _PageCalendarState extends ConsumerState<PageCalendar> {
     final historyId = memo.historyId;
 
     if (historyId != null) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return HistoryListPopup(
           historyId: historyId,
         );
       }));
+
+      loadByDate(selectedDate);
     } else {
       throw Exception("히스토리 리스트를 접근하는데 있어 올바르지 않은 접근입니다. $historyId");
     }

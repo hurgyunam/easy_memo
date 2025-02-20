@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateHistoryMemoPopup extends ConsumerStatefulWidget {
-  final String rootMemoId;
+  final String? rootMemoId;
+  final String? historyId;
   final String rootMemoTitle;
   const CreateHistoryMemoPopup({
     super.key,
-    required this.rootMemoId,
+    this.rootMemoId,
+    this.historyId,
     required this.rootMemoTitle,
   });
 
@@ -24,6 +26,7 @@ class _CreateHistoryMemoPopupState
   String textContent = "";
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
+  String? beforeMemoContent;
 
   DateTime nowZeroTime = DateTime.now().copyWith(
     hour: 0,
@@ -34,7 +37,43 @@ class _CreateHistoryMemoPopupState
   );
 
   @override
+  void initState() {
+    super.initState();
+
+    initBeforeMemoContent();
+  }
+
+  Future<void> initBeforeMemoContent() async {
+    final rootMemoId = widget.rootMemoId;
+    final historyId = widget.historyId;
+
+    if (rootMemoId != null) {
+      final memoStorage = ref.read(memoStorageProvider);
+      final lastMemo = await memoStorage.loadByMemoId(memoId: rootMemoId);
+
+      if (lastMemo != null) {
+        setState(() {
+          beforeMemoContent = lastMemo.text;
+          contentController.text = lastMemo.text;
+        });
+      } else {
+        throw Exception("root memo의 content text를 불러오는데 실패했습니다.");
+      }
+    } else if (historyId != null) {
+      final memoStorage = ref.read(memoStorageProvider);
+      final memos = await memoStorage.loadByHistoryId(historyId: historyId);
+
+      setState(() {
+        beforeMemoContent = memos.last.text;
+        contentController.text = memos.last.text;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final beforeMemoContent = this.beforeMemoContent;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Create History Memo From ${widget.rootMemoTitle}"),
@@ -84,14 +123,39 @@ class _CreateHistoryMemoPopupState
                       final memoStorage = ref.read(memoStorageProvider);
 
                       final savedMemoId = memoStorage.saveMemo(
-                          title: textTitle,
-                          content: textContent,
-                          date: nowZeroTime,
-                          rootMemoId: widget.rootMemoId);
+                        title: textTitle,
+                        content: textContent,
+                        date: nowZeroTime,
+                        rootMemoId: widget.rootMemoId,
+                        historyId: widget.historyId,
+                      );
 
                       Navigator.pop(context, savedMemoId);
                     },
                   ),
+                  SizedBox(height: 20),
+                  if (beforeMemoContent != null)
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text("이전 메모와의 비교"),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(beforeMemoContent),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                 ],
               ),
             ),
